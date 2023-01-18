@@ -9,7 +9,7 @@ import { postsRouter } from "./routers/postsRouter";
  */
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
-  postsRouter: postsRouter,
+  posts: postsRouter,
 });
 
 // export type definition of API

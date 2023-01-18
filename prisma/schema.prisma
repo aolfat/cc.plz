@@ -70,10 +70,10 @@ model Post {
   id               String   @id @default(cuid())
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  about            String
+  caption          String
   editedPhotoUrl   String
-  originalPhotoUrl String
+  originalPhotoUrl String?
   author           User     @relation(fields: [authorId], references: [id])
   authorId         String
-  private          Boolean
+  private          Boolean  @default(true)
 }

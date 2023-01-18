@@ -1,16 +1,26 @@
 import { type NextPage } from "next";
 import React, { useRef, useState } from "react";
 
+import { api } from "../../utils/api";
+
 const Upload: NextPage = () => {
   const [caption, setCaption] = useState("");
-  const [, setEditedPhoto] = useState<File | null>(null);
+  const [editedPhoto, setEditedPhoto] = useState<File | null>(null);
+  const createPostMutation = api.posts.createPost.useMutation();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmitUpload = (e: React.FormEvent) => {
+  async function handleSubmitUpload(e: React.FormEvent) {
     e.preventDefault();
+    if (!editedPhoto) return;
+    await createPostMutation.mutateAsync({
+      originalPhotoUrl: null,
+      caption: caption,
+      editedPhotoUrl: editedPhoto.name,
+      authorId: "clczkcby90000xawwbjqll5g9",
+    });
     console.log("submitting", e);
-  };
+  }
 
   const handleEditedFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log("edited file staged");
