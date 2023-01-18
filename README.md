@@ -1,3 +1,6 @@
+## Wtf is cc.plz?
+"constructive criticism please"
+
 ## What’re we building?
 
 A web app that allows photographers (creators) to post photos along with the original so that users can give feedback in a thread-like format. Very similar to Reddit. Users can post a photograph with the original and a link is generated that they can share with others. Authenticated users can leave constructive criticism “CC” on others’ posts.
