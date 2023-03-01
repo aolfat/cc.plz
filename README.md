@@ -1,4 +1,5 @@
 ## Wtf is cc.plz?
+
 "constructive criticism please"
 
 ## What’re we building?
@@ -13,6 +14,8 @@ A web app that allows photographers (creators) to post photos along with the ori
 - Users should be able to create a post with photos
 - Posts should have a shortened URL created that they can share with others (similar to the google docs sharing feature)
 - Users can leave feedback (constructive criticism or ‘CC’) on other users' post
+  - Users can upload images as their feedback
+  - Users can pull up the photo and directly annotate it
 - Users can reply to feedback
 - Users can like posts
 - Users cannot see other feedback until they’ve provided feedback
@@ -26,8 +29,9 @@ A web app that allows photographers (creators) to post photos along with the ori
 ## MVP
 
 - [x] Users can create an account using Facebook or google
-- [ ] Users can create a post
-- [ ] Users can create CC
+- [x] Users can create a post
+- [ ] Users can comment on a post
+- [ ] Users can reply to comments
 
 ## Technologies
 
@@ -38,5 +42,6 @@ A web app that allows photographers (creators) to post photos along with the ori
 - (image host site)
 - Docker
 - PostgreSQL
+- NextAuth.js
 - tRPC
 - Prisma

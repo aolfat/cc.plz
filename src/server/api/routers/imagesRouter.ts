@@ -2,13 +2,13 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
-export const postsRouter = createTRPCRouter({
-  createPost: publicProcedure
+export const imagesRouter = createTRPCRouter({
+  createPresignedUrl: publicProcedure
     .input(
       z.object({
         authorId: z.string(),
         caption: z.string(),
-        editedPhotoUrl: z.string().nullish(),
+        editedPhotoUrl: z.string(),
         originalPhotoUrl: z.string().nullish(),
       })
     )
@@ -20,27 +20,6 @@ export const postsRouter = createTRPCRouter({
           caption: caption,
           editedPhotoUrl: editedPhotoUrl,
           originalPhotoUrl: originalPhotoUrl,
-        },
-      });
-
-      return post;
-    }),
-  getPost: publicProcedure
-    .input(
-      z.object({
-        postId: z.string(),
-      })
-    )
-    .query(async ({ input, ctx }) => {
-      if (!ctx.session || !ctx.session.user)
-        throw new Error("Not authenticated");
-
-      const { postId } = input;
-      const post = await ctx.prisma.post.findUnique({
-        where: {
-          id: postId,
-          // ensure that the user is the author of the post
-          // authorId: ctx.session.user.id,
         },
       });
 

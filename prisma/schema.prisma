@@ -55,7 +55,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Post          Post[]
+  posts          Post[]
+  comments       Comment[]
 }
 
 model VerificationToken {
@@ -71,9 +72,25 @@ model Post {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   caption          String
-  editedPhotoUrl   String
+  editedPhotoUrl   String?
   originalPhotoUrl String?
   author           User     @relation(fields: [authorId], references: [id])
   authorId         String
   private          Boolean  @default(true)
+  
+  comments         Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  text      String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+  parent    Comment? @relation("CommentToComment", fields: [parentId], references: [id])
+  children  Comment[] @relation("CommentToComment")
+  parentId  String?
 }

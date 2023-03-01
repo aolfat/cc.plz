@@ -1,9 +1,16 @@
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import React, { useRef, useState } from "react";
 
 import { api } from "../../utils/api";
+import uploadImageToS3 from "../api/s3";
 
 const Upload: NextPage = () => {
+  const { data: session, status } = useSession();
+
+  const router = useRouter();
+
   const [caption, setCaption] = useState("");
   const [editedPhoto, setEditedPhoto] = useState<File | null>(null);
   const createPostMutation = api.posts.createPost.useMutation();
@@ -12,14 +19,23 @@ const Upload: NextPage = () => {
 
   async function handleSubmitUpload(e: React.FormEvent) {
     e.preventDefault();
-    if (!editedPhoto) return;
-    await createPostMutation.mutateAsync({
-      originalPhotoUrl: null,
-      caption: caption,
-      editedPhotoUrl: editedPhoto.name,
-      authorId: "clczkcby90000xawwbjqll5g9",
-    });
-    console.log("submitting", e);
+    if (status !== "authenticated") return;
+    if (session.user && session.user.id !== undefined) {
+      if (!editedPhoto) return;
+      const location = await uploadImageToS3(
+        editedPhoto,
+        `${session.user.id}/${editedPhoto.name}`
+      );
+
+      const post = await createPostMutation.mutateAsync({
+        originalPhotoUrl: null,
+        editedPhotoUrl: location,
+        caption: caption,
+        authorId: session.user.id,
+      });
+
+      router.push(`/posts/${post.id}`);
+    }
   }
 
   const handleEditedFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,6 +43,10 @@ const Upload: NextPage = () => {
     setEditedPhoto(e.target.files?.[0] || null);
   };
 
+  if (status === "loading") return <div>Loading...</div>;
+  // If not authenticated, route to home page
+  if (status === "unauthenticated") router.push("/");
+  if (status !== "authenticated") return <div>Not authenticated</div>;
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#ab6822] to-[#242648]">
       {/* <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 "> */}
